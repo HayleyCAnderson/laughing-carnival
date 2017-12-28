@@ -60,24 +60,13 @@ def scoring(count, other_count)
 end
 
 puts points("") == {a: {score: "love", games:0}, b: {score:"love", games:0}}
-puts points("")
 puts points("a") == {a: {score: "15", games:0}, b: {score:"love", games:0}}
-puts points("a") 
 puts points("bbb") == {a: {score: "love", games:0}, b: {score:"40", games:0}}
-puts points("bbb")
 puts points("abab") == {a: {score: "30", games:0}, b: {score:"30", games:0}}
-puts points("abab")
 puts points("bbbb") == {a: {score: "love", games:0}, b: {score:"love", games:1}}
-puts points("bbbb")
 puts points("abbbbbbbbbbbb") == {a: {score: "love", games:0}, b: {score:"love", games:3}}
-puts points("abbbbbbbbbbbb")
 puts points("bbbbbbbbbbbba") == {a: {score: "15", games:0}, b: {score:"love", games:3}}
-puts points("bbbbbbbbbbbba")
 puts points("aaabbba") == {a: {score: "adv", games:0}, b: {score:"", games:0}}
-puts points("aaabbba")
 puts points("aaabbbab") == {a: {score: "40", games:0}, b: {score:"40", games:0}}
-puts points("aaabbbab")
 puts points("aaabbbabb") == {a: {score: "", games:0}, b: {score:"adv", games:0}}
-puts points("aaabbbabb")
 puts points("aaabbbabbb") == {a: {score: "love", games:0}, b: {score:"love", games:1}}
-puts points("aaabbbabbb")

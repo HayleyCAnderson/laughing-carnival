@@ -1,3 +1,14 @@
+=begin
+This is intentionally over-engineered in order to brush up on my rusty Ruby. It
+is a solution to this problem, which I wrote:
+
+A Caesar, or shift, cipher is one of the simplest types of encryption. It takes a string of characters and replaces each character with another character a given number of characters further in the alphabet. Here assume use of only the 26-character Latin alphabet. For example, HAYLEY with a shift of 3 becomes KDBOHB.
+
+1. Write some code that allows submission of a numeric shift value and a string to be encrypted and returns the encrypted version of the string.
+
+2. Write some code that takes a potentially shift-encrypted string and returns every possible shift and potentially decrypted string (26 results).
+=end
+
 module Alphabet
   ALPHABET = ('A'..'Z').to_a
   ALPHABET_KEY = ALPHABET.map.with_index { |c, i| [c, i] }.to_h
