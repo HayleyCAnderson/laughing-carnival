@@ -94,3 +94,38 @@ end
 
 puts master_mind("RGBY", "GGRR") == {hits: 1, pseudo_hits: 1}
 
+puts "17.6"
+# Given an array of integers, write a method to find indices m and n such that
+# if you sorted elements m through n, the entire array would be sorted. Minimize
+# n - m (that is, find the smallest such sequence).
+
+def needs_sorting_indices(arr)
+  min_index = nil
+  max_index = nil
+
+  arr.each_with_index do |int, index|
+    arr.each_with_index do |loop_int, loop_index|
+      # find min index
+      if int < loop_int && index > loop_index
+        if !min_index || loop_index < min_index
+          min_index = loop_index
+        end
+      end
+
+      # find max index
+      if int > loop_int && index < loop_index
+        if !max_index || loop_index > max_index
+          max_index = loop_index
+        end
+      end
+    end
+  end
+
+  [min_index, max_index]
+end
+
+arr = [1, 2, 4, 7, 10, 11, 7, 12, 6, 7, 16, 18, 19]
+puts needs_sorting_indices(arr) == [3, 9]
+puts needs_sorting_indices([2, 1, 5, 3, 7, 9]) == [0, 3]
+puts needs_sorting_indices([1, 5, 3, 7, 9, 2]) == [1, 5]
+
