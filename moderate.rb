@@ -129,3 +129,115 @@ puts needs_sorting_indices(arr) == [3, 9]
 puts needs_sorting_indices([2, 1, 5, 3, 7, 9]) == [0, 3]
 puts needs_sorting_indices([1, 5, 3, 7, 9, 2]) == [1, 5]
 
+puts "17.7"
+#Given any integer, print an English phrase that describes the integer.
+
+ONES = {
+  0 => nil,
+  1 => "one",
+  2 => "two",
+  3 => "three",
+  4 => "four",
+  5 => "five",
+  6 => "six",
+  7 => "seven",
+  8 => "eight",
+  9 => "nine"
+}
+
+TEENS = {
+  0 => "ten",
+  1 => "eleven",
+  2 => "twelve",
+  3 => "thirteen",
+  4 => "fourteen",
+  5 => "fifteen",
+  6 => "sixteen",
+  7 => "seventeen",
+  8 => "eighteen",
+  9 => "nineteen"
+}
+
+TENS = {
+  2 => "twenty",
+  3 => "thirty",
+  4 => "forty",
+  5 => "fifty",
+  6 => "sixty",
+  7 => "seventy",
+  8 => "eighty",
+  9 => "ninety"
+}
+
+DIGITS = {
+  1 => nil,
+  3 => "hundred",
+  4 => "thousand",
+  7 => "million",
+  10 => "billion"
+}
+
+def spell_out(integer)
+  ints = integer.to_s.split("")
+  prev_int = nil
+  words = []
+
+  return if ints.length > DIGITS.keys.last
+
+  ints.each_with_index do |i, index|
+    int = i.to_i
+    digit = ints.length - index
+
+    if DIGITS.keys.include?(digit)
+      double = spell_double(prev_int, int)
+      spelled_digit = DIGITS[digit]
+      if double
+        words << double
+        words << spelled_digit if spelled_digit
+      end
+      prev_int = nil
+    else
+      prev_int = int
+    end
+  end
+
+  words << "zero" if words.empty?
+  words.join(" ").rstrip
+end
+
+def spell_double(int_one, int_two)
+  if !int_one || int_one == 0
+    ONES[int_two]
+  elsif int_one == 1
+    TEENS[int_two]
+  elsif int_two == 0
+    TENS[int_one]
+  else
+    TENS[int_one] + " " + ONES[int_two]
+  end
+end
+
+puts spell_out(1234) == "one thousand two hundred thirty four"
+puts spell_out(430) == "four hundred thirty"
+puts spell_out(23) == "twenty three"
+puts spell_out(12) == "twelve"
+puts spell_out(2) == "two"
+puts spell_out(100000) == "one hundred thousand"
+puts spell_out(30000000) == "thirty million"
+puts spell_out(0) == "zero"
+puts spell_out(10000000000) == nil
+
+puts "17.8"
+# You are given an array of integers (both positive and negative). Find the
+# contiguous sequence with the largest sum. Return the sum.
+
+def max_contiguous_sum(arr)
+
+end
+
+puts max_contiguous_sum([2, -8, 3, -2, 4, 10]) == 5 # [3, -2, 4]
+
+puts "17.9"
+# Design a method to find the frequency of occurrences of any given word in a
+# book.
+
