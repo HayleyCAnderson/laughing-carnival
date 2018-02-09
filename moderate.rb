@@ -178,6 +178,7 @@ DIGITS = {
 }
 
 def spell_out(integer)
+  #print integer
   ints = integer.to_s.split("")
   prev_int = nil
   words = []
@@ -202,6 +203,7 @@ def spell_out(integer)
   end
 
   words << "zero" if words.empty?
+  #print words
   words.join(" ").rstrip
 end
 
@@ -223,19 +225,49 @@ puts spell_out(23) == "twenty three"
 puts spell_out(12) == "twelve"
 puts spell_out(2) == "two"
 puts spell_out(100000) == "one hundred thousand"
+puts spell_out(102000) == "one hundred two thousand"
 puts spell_out(30000000) == "thirty million"
 puts spell_out(0) == "zero"
 puts spell_out(10000000000) == nil
+puts spell_out(-10) == "negative ten"
+# I have fucked up
 
 puts "17.8"
 # You are given an array of integers (both positive and negative). Find the
 # contiguous sequence with the largest sum. Return the sum.
 
-def max_contiguous_sum(arr)
+Window = Struct.new(:start_index, :end_index, :sum)
 
+def max_contiguous_sum(arr)
+  windows = {}
+  max_window = nil
+
+  arr.each_with_index do |i, index|
+    (arr.length - index).times do |t|
+      end_index = index + t
+
+      if windows[index]
+        sum = windows[index].last.sum + arr[end_index]
+        window = Window.new(index, end_index, sum)
+        windows[index] << window
+      else
+        sum = arr[index..end_index].inject { |result, int| result + int }
+        window = Window.new(index, end_index, sum)
+        windows[index] = [window]
+      end
+
+      max_window = window if !max_window || window.sum > max_window.sum
+    end
+  end
+
+  max_window ? max_window.sum : 0
 end
 
-puts max_contiguous_sum([2, -8, 3, -2, 4, 10]) == 5 # [3, -2, 4]
+puts max_contiguous_sum([2, -8, 3, -2, 4, -10]) == 5
+puts max_contiguous_sum([2, 8, 3, 2, 4, 10]) == 29
+puts max_contiguous_sum([-2, -8, 3, -2, -4, -10]) == 3
+puts max_contiguous_sum([-1]) == -1
+puts max_contiguous_sum([]) == 0
 
 puts "17.9"
 # Design a method to find the frequency of occurrences of any given word in a
