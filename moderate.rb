@@ -238,7 +238,7 @@ puts "17.8"
 
 Window = Struct.new(:start_index, :end_index, :sum)
 
-def max_contiguous_sum(arr)
+def max_contiguous_window(arr)
   windows = {}
   max_window = nil
 
@@ -260,14 +260,38 @@ def max_contiguous_sum(arr)
     end
   end
 
-  max_window ? max_window.sum : 0
+  max_window ? arr[max_window.start_index..max_window.end_index] : []
+end
+
+# from book - more simplistic for summing if windows not needed
+def max_contiguous_sum(arr)
+  max_sum = 0
+  sum = 0
+
+  arr.each_with_index do |i, index|
+    sum += i
+
+    if max_sum < sum
+      max_sum = sum
+    elsif sum < 0
+      sum = 0
+    end
+  end
+
+  max_sum
 end
 
 puts max_contiguous_sum([2, -8, 3, -2, 4, -10]) == 5
 puts max_contiguous_sum([2, 8, 3, 2, 4, 10]) == 29
 puts max_contiguous_sum([-2, -8, 3, -2, -4, -10]) == 3
-puts max_contiguous_sum([-1]) == -1
+puts max_contiguous_sum([-1]) == 0
 puts max_contiguous_sum([]) == 0
+
+puts max_contiguous_window([2, -8, 3, -2, 4, -10]) == [3, -2, 4]
+puts max_contiguous_window([2, 8, 3, 2, 4, 10]) == [2, 8, 3, 2, 4, 10]
+puts max_contiguous_window([-2, -8, 3, -2, -4, -10]) == [3]
+puts max_contiguous_window([-1]) == [-1]
+puts max_contiguous_window([]) == []
 
 puts "17.9"
 # Design a method to find the frequency of occurrences of any given word in a
