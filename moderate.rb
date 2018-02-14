@@ -132,105 +132,88 @@ puts needs_sorting_indices([1, 5, 3, 7, 9, 2]) == [1, 5]
 puts "17.7"
 #Given any integer, print an English phrase that describes the integer.
 
-ONES = {
-  0 => nil,
-  1 => "one",
-  2 => "two",
-  3 => "three",
-  4 => "four",
-  5 => "five",
-  6 => "six",
-  7 => "seven",
-  8 => "eight",
-  9 => "nine"
-}
+class Stringify
+  ONES = {
+    0 => nil, 1 => "one", 2 => "two", 3 => "three", 4 => "four",
+    5 => "five", 6 => "six", 7 => "seven", 8 => "eight", 9 => "nine"
+  }
 
-TEENS = {
-  0 => "ten",
-  1 => "eleven",
-  2 => "twelve",
-  3 => "thirteen",
-  4 => "fourteen",
-  5 => "fifteen",
-  6 => "sixteen",
-  7 => "seventeen",
-  8 => "eighteen",
-  9 => "nineteen"
-}
+  TEENS = {
+    0 => "ten", 1 => "eleven", 2 => "twelve", 3 => "thirteen", 4 => "fourteen",
+    5 => "fifteen", 6 => "sixteen", 7 => "seventeen", 8 => "eighteen", 9 => "nineteen"
+  }
 
-TENS = {
-  2 => "twenty",
-  3 => "thirty",
-  4 => "forty",
-  5 => "fifty",
-  6 => "sixty",
-  7 => "seventy",
-  8 => "eighty",
-  9 => "ninety"
-}
+  TENS = {
+    2 => "twenty", 3 => "thirty", 4 => "forty", 5 => "fifty",
+    6 => "sixty", 7 => "seventy", 8 => "eighty", 9 => "ninety"
+  }
 
-DIGITS = {
-  1 => nil,
-  3 => "hundred",
-  4 => "thousand",
-  7 => "million",
-  10 => "billion"
-}
+  SETS = {
+    2 => "thousand", 3 => "million", 4 => "billion", 5 => "trillion"
+  }
 
-def spell_out(integer)
-  #print integer
-  ints = integer.to_s.split("")
-  prev_int = nil
-  words = []
+  def spell_int(integer)
+    processed_int = preprocess_int(integer)
+    spelling = spell(processed_int, [], SETS[processed_int.length])
+    spelling.empty? ? "zero" : spelling.join(" ")
+  end
 
-  return if ints.length > DIGITS.keys.last
+  private
 
-  ints.each_with_index do |i, index|
-    int = i.to_i
-    digit = ints.length - index
+  def spell(processed_int, spelling = [], set_place = nil)
+    spelling += spell_triple(*processed_int.pop)
+    spelling << set_place if set_place
+    processed_int.empty? ? spelling : spell(processed_int, spelling)
+  end
 
-    if DIGITS.keys.include?(digit)
-      double = spell_double(prev_int, int)
-      spelled_digit = DIGITS[digit]
-      if double
-        words << double
-        words << spelled_digit if spelled_digit
+  # 1234
+  # [[4, 3, 2], [1]]
+  def preprocess_int(integer)
+    processed_int = []
+    current_set = []
+
+    integer.to_s.reverse.each_char do |char|
+      if current_set.length < 3
+        current_set << char.to_i
+      else
+        processed_int << current_set
+        current_set = [char.to_i]
       end
-      prev_int = nil
-    else
-      prev_int = int
     end
+
+    processed_int << current_set
   end
 
-  words << "zero" if words.empty?
-  #print words
-  words.join(" ").rstrip
-end
+  def spell_triple(one_int = 0, ten_int = 0, hundred_int = 0)
+    spelling = []
 
-def spell_double(int_one, int_two)
-  if !int_one || int_one == 0
-    ONES[int_two]
-  elsif int_one == 1
-    TEENS[int_two]
-  elsif int_two == 0
-    TENS[int_one]
-  else
-    TENS[int_one] + " " + ONES[int_two]
+    if hundred_int > 0
+      spelling << ONES[hundred_int]
+      spelling << "hundred"
+    end
+
+    if ten_int == 1
+      spelling << TEENS[one_int]
+    else
+      spelling << TENS[ten_int] if ten_int > 0
+      spelling << ONES[one_int] if one_int > 0
+    end
+
+    spelling
   end
 end
 
-puts spell_out(1234) == "one thousand two hundred thirty four"
-puts spell_out(430) == "four hundred thirty"
-puts spell_out(23) == "twenty three"
-puts spell_out(12) == "twelve"
-puts spell_out(2) == "two"
-puts spell_out(100000) == "one hundred thousand"
-puts spell_out(102000) == "one hundred two thousand"
-puts spell_out(30000000) == "thirty million"
-puts spell_out(0) == "zero"
-puts spell_out(10000000000) == nil
-puts spell_out(-10) == "negative ten"
-# I have fucked up
+stringify = Stringify.new
+puts stringify.spell_int(1234) == "one thousand two hundred thirty four"
+puts stringify.spell_int(430) == "four hundred thirty"
+puts stringify.spell_int(23) == "twenty three"
+puts stringify.spell_int(12) == "twelve"
+puts stringify.spell_int(2) == "two"
+puts stringify.spell_int(100000) == "one hundred thousand"
+puts stringify.spell_int(102000) == "one hundred two thousand"
+puts stringify.spell_int(30000000) == "thirty million"
+puts stringify.spell_int(0) == "zero"
+puts stringify.spell_int(10000000000) == "ten billion"
 
 puts "17.8"
 # You are given an array of integers (both positive and negative). Find the
